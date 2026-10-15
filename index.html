@@ -1,498 +1,543 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kurumsal Yemek Menü Sistemi - 2 Haftalık Tablo</title>
+    <title>Kurumsal Yemek Menüsü</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Font: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-        
         body {
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: #f1f5f9;
-            color: #0f172a;
+            font-family: 'Inter', sans-serif;
         }
-
-        /* Custom styling matching corporate navy blue layout */
-        .header-bg {
-            background-color: #0f172a;
-        }
-        
-        .badge-kurumsal {
-            background-color: #0f172a;
-            color: #f59e0b;
-        }
-
-        /* Print CSS for exact 1-page A4 Landscape fit */
+        /* A4 Landscape Print Optimization */
         @media print {
             @page {
                 size: A4 landscape;
-                margin: 5mm;
+                margin: 6mm;
             }
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-
-            html, body {
-                background: white !important;
+            body {
+                background-color: #ffffff !important;
                 color: #0f172a !important;
-                font-size: 7.5pt !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                width: 100% !important;
-                height: 100% !important;
-                overflow: hidden !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
-
             .no-print {
                 display: none !important;
             }
-
-            .print-container {
+            .print-full {
                 width: 100% !important;
-                max-width: 100% !important;
+                max-width: none !important;
                 margin: 0 !important;
-                padding: 2px !important;
+                padding: 0 !important;
                 box-shadow: none !important;
                 border: none !important;
             }
-
-            /* Yan Yana 2 Sütun Düzeni - A4 Yatay Alanı Tam Doldurur */
-            .print-grid {
+            .print-grid-container {
                 display: grid !important;
                 grid-template-columns: 1fr 1fr !important;
-                gap: 8px !important;
-                width: 100% !important;
+                gap: 12px !important;
             }
-
             table {
-                border-collapse: collapse !important;
-                width: 100% !important;
-                border: 1.5px solid #0f172a !important;
+                font-size: 11px !important;
             }
-
             th, td {
-                border: 1px solid #cbd5e1 !important;
-                padding: 3px 5px !important;
-                line-height: 1.2 !important;
-            }
-
-            th {
-                background-color: #0f172a !important;
-                color: white !important;
-                -webkit-print-color-adjust: exact;
-            }
-
-            input, textarea {
-                border: none !important;
-                background: transparent !important;
-                padding: 0 !important;
-                resize: none !important;
-                font-size: 7.5pt !important;
-                color: #0f172a !important;
-                width: 100% !important;
-            }
-
-            .meal-list-item::before {
-                content: "• ";
-                color: #1e3a8a;
-                font-weight: bold;
+                padding: 5px 8px !important;
             }
         }
     </style>
 </head>
-<body class="p-2 md:p-6 min-h-screen">
+<body class="bg-slate-100 text-slate-800 h-full flex flex-col justify-between">
 
-    <!-- Üst Kontrol Paneli (Yazdırma Sırasında Gizlenir) -->
-    <div class="max-w-[1600px] mx-auto mb-4 flex flex-wrap items-center justify-between gap-4 bg-white p-4 rounded-2xl shadow-sm border border-slate-200 no-print">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-xl shadow-md">
-                🍽️
+    <header class="no-print bg-slate-900 text-white shadow-md sticky top-0 z-40 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="bg-blue-600 p-2 rounded-lg text-white font-bold shadow">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold tracking-tight">Kurumsal Yemek Menüsü</h1>
+                    <p class="text-xs text-slate-400">2 Haftalık Öğle ve Akşam Yemeği Planı</p>
+                </div>
             </div>
-            <div>
-                <h1 class="text-lg md:text-xl font-extrabold text-slate-900 tracking-tight">Kurumsal Yemek Menüsü</h1>
-                <p class="text-xs text-slate-500 font-medium">2 Haftalık Öğle ve Akşam Yemeği Planı</p>
+
+            <div class="flex items-center space-x-3 flex-wrap gap-y-2">
+                <div class="flex items-center space-x-2 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
+                    <label for="startDateInput" class="text-xs font-medium text-slate-300">Başlangıç Pazartesi:</label>
+                    <input type="date" id="startDateInput" onchange="window.onDateChange(this.value)" class="bg-slate-700 text-white text-xs rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                </div>
+
+                <!-- Admin Login Button -->
+                <button onclick="window.toggleAuthModal(true)" id="authBtn" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2 rounded-lg shadow transition flex items-center space-x-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    <span id="authBtnText">Yönetici Girişi</span>
+                </button>
+
+                <!-- Print / PDF Button -->
+                <button onclick="window.printMenu()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-4 py-2 rounded-lg shadow transition flex items-center space-x-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                    </svg>
+                    <span>Yazdır / PDF</span>
+                </button>
             </div>
         </div>
+    </header>
 
-        <div class="flex flex-wrap items-center gap-3">
-            <!-- Hafta Başlangıç Tarihi -->
-            <div class="flex items-center gap-2 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200">
-                <label for="startDateInput" class="text-xs font-bold text-slate-700">Başlangıç Pazartesi:</label>
-                <input type="date" id="startDateInput" onchange="updateDates()" class="text-xs font-semibold bg-transparent text-slate-900 focus:outline-none cursor-pointer">
-            </div>
-
-            <!-- Yönetici Giriş / Çıkış Butonu -->
-            <button id="authBtn" onclick="toggleAuthModal()" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-xl text-xs font-bold transition flex items-center gap-2 shadow-sm">
-                <span>🔒</span> <span id="authBtnText">Yönetici Girişi</span>
-            </button>
-
-            <!-- Yazdır / PDF İndir Butonu -->
-            <button onclick="window.print()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition flex items-center gap-2 shadow-sm">
-                <span>🖨️</span> Yazdır / PDF
-            </button>
-        </div>
-    </div>
-
-    <!-- Ana Yazdırma Konteyneri -->
-    <div class="max-w-[1600px] mx-auto bg-white p-4 md:p-6 rounded-2xl shadow-lg border border-slate-200 print-container">
+    <main class="flex-grow max-w-[1450px] w-full mx-auto p-4 md:p-6 print-full">
         
-        <!-- Üst Kurum Başlığı -->
-        <div class="flex flex-wrap items-center justify-between border-b-2 border-slate-900 pb-3 mb-4 gap-2">
-            <div>
-                <h2 id="mainTitle" class="text-xl md:text-2xl font-black text-slate-900 uppercase tracking-tight">YEMEK MENÜSÜ</h2>
-                <p class="text-xs md:text-sm font-bold text-amber-800 mt-0.5">
-                    Dönem: <span id="overallDateRange" class="font-extrabold text-slate-900">12.10.2026 - 23.10.2026</span>
-                </p>
-            </div>
-            <div class="bg-slate-900 text-amber-400 font-extrabold text-[11px] md:text-xs px-3 py-1.5 rounded-md tracking-wider uppercase shadow-sm">
-                KURUMSAL YEMEK HİZMETLERİ
-            </div>
+        <!-- Notification Banner -->
+        <div id="statusBanner" class="no-print hidden mb-4 p-3 rounded-lg text-sm font-medium shadow-sm flex items-center justify-between">
+            <span id="statusMessage"></span>
+            <button onclick="this.parentElement.classList.add('hidden')" class="text-xs opacity-70 hover:opacity-100">Kapat</button>
         </div>
 
-        <!-- 2 Haftalık Yan Yana Tablo Grid Yapısı -->
-        <div class="print-grid grid grid-cols-1 lg:grid-cols-2 gap-4">
-
-            <!-- 1. HAFTA -->
-            <div class="border border-slate-300 rounded-xl overflow-hidden flex flex-col justify-between bg-white shadow-sm">
+        <!-- Document Card -->
+        <div class="bg-white rounded-xl shadow-lg border border-slate-200 p-4 md:p-6 print-full">
+            
+            <!-- Document Header -->
+            <div class="border-b border-slate-200 pb-4 mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <!-- 1. Hafta Başlığı -->
-                    <div class="bg-slate-900 text-white text-center py-2 px-3 font-extrabold text-xs md:text-sm tracking-widest uppercase">
-                        <span id="week1HeaderTitle">12 - 16 EKİM 2026</span>
-                    </div>
-
-                    <!-- Tablo -->
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs border-collapse">
-                            <thead>
-                                <tr class="bg-slate-100 text-slate-900 border-b border-slate-300">
-                                    <th class="p-2 border-r border-slate-300 w-28 text-center font-black uppercase text-[11px]">GÜN</th>
-                                    <th class="p-2 border-r border-slate-300 font-black uppercase text-[11px]">ÖĞLE YEMEĞİ</th>
-                                    <th class="p-2 font-black uppercase text-[11px]">AKŞAM YEMEĞİ</th>
-                                </tr>
-                            </thead>
-                            <tbody id="week1TableBody" class="divide-y divide-slate-200">
-                                <!-- JS ile Doldurulur -->
-                            </tbody>
-                        </table>
-                    </div>
+                    <h2 class="text-2xl font-bold text-slate-900 tracking-tight">YEMEK MENÜSÜ</h2>
+                    <p class="text-sm font-medium text-slate-600 mt-1" id="dateRangeDisplay">Dönem: Yükleniyor...</p>
                 </div>
-
-                <!-- 1. Hafta Notlar -->
-                <div class="p-2.5 bg-slate-50/80 border-t border-slate-200">
-                    <div class="text-[10px] font-extrabold text-slate-900 uppercase mb-0.5 flex items-center gap-1">
-                        <span>📌</span> HAZIRLIK & NOTLAR (1. HAFTA)
+                <div class="flex items-center space-x-3">
+                    <span id="editModeIndicator" class="hidden bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full border border-amber-300 animate-pulse">Düzenleme Modu Aktif</span>
+                    <button id="saveMenuBtn" onclick="window.saveMenuToCloud()" class="no-print hidden bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold px-4 py-2 rounded-lg shadow transition">Menüyü Buluta Kaydet</button>
+                    <div class="bg-slate-900 text-white text-xs font-bold px-4 py-2 rounded-lg shadow-sm">
+                        KURUMSAL YEMEK HİZMETLERİ
                     </div>
-                    <textarea id="week1Notes" disabled onchange="saveNotes()" class="w-full text-[11px] italic text-slate-600 bg-transparent resize-none focus:outline-none h-10 border-0 p-0" placeholder="Açıklama veya alerjen uyarısı yazınız..."></textarea>
                 </div>
             </div>
 
-            <!-- 2. HAFTA -->
-            <div class="border border-slate-300 rounded-xl overflow-hidden flex flex-col justify-between bg-white shadow-sm">
-                <div>
-                    <!-- 2. Hafta Başlığı -->
-                    <div class="bg-slate-900 text-white text-center py-2 px-3 font-extrabold text-xs md:text-sm tracking-widest uppercase">
-                        <span id="week2HeaderTitle">19 - 23 EKİM 2026</span>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 print-grid-container">
+                
+                <!-- WEEK 1 -->
+                <div class="border border-slate-300 rounded-lg overflow-hidden shadow-sm flex flex-col justify-between">
+                    <div>
+                        <!-- Week 1 Header -->
+                        <div class="bg-slate-900 text-white text-center py-2.5 font-bold text-sm tracking-wider uppercase" id="week1Title">
+                            1. Hafta Menüsü
+                        </div>
+                        <!-- Week 1 Table -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse border border-slate-300">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-700 text-xs font-bold border-b border-slate-300">
+                                        <th class="p-2.5 w-1/4 border border-slate-300 text-center">GÜN</th>
+                                        <th class="p-2.5 w-3/8 border border-slate-300 bg-emerald-50 text-emerald-900">ÖĞLE YEMEĞİ</th>
+                                        <th class="p-2.5 w-3/8 border border-slate-300 bg-amber-50 text-amber-900">AKŞAM YEMEĞİ</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="week1TableBody" class="divide-y divide-slate-300 text-xs">
+                                    <!-- Dynamic rows inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-
-                    <!-- Tablo -->
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs border-collapse">
-                            <thead>
-                                <tr class="bg-slate-100 text-slate-900 border-b border-slate-300">
-                                    <th class="p-2 border-r border-slate-300 w-28 text-center font-black uppercase text-[11px]">GÜN</th>
-                                    <th class="p-2 border-r border-slate-300 font-black uppercase text-[11px]">ÖĞLE YEMEĞİ</th>
-                                    <th class="p-2 font-black uppercase text-[11px]">AKŞAM YEMEĞİ</th>
-                                </tr>
-                            </thead>
-                            <tbody id="week2TableBody" class="divide-y divide-slate-200">
-                                <!-- JS ile Doldurulur -->
-                            </tbody>
-                        </table>
+                    <!-- Week 1 Notes -->
+                    <div class="p-3 bg-slate-50 border-t border-slate-300 mt-auto">
+                        <div class="text-[11px] font-bold text-slate-700 uppercase mb-1">📌 HAZIRLIK & NOTLAR (1. HAFTA)</div>
+                        <div id="week1NotesDisplay" class="text-xs text-slate-600 italic min-h-[36px]"></div>
+                        <textarea id="week1NotesInput" oninput="window.updateLocalData()" class="no-print hidden w-full text-xs p-1.5 border border-slate-300 rounded bg-white mt-1 focus:outline-none focus:ring-1 focus:ring-blue-500" placeholder="1. hafta için notlar..."></textarea>
                     </div>
                 </div>
 
-                <!-- 2. Hafta Notlar -->
-                <div class="p-2.5 bg-slate-50/80 border-t border-slate-200">
-                    <div class="text-[10px] font-extrabold text-slate-900 uppercase mb-0.5 flex items-center gap-1">
-                        <span>📌</span> HAZIRLIK & NOTLAR (2. HAFTA)
+                <!-- WEEK 2 -->
+                <div class="border border-slate-300 rounded-lg overflow-hidden shadow-sm flex flex-col justify-between">
+                    <div>
+                        <!-- Week 2 Header -->
+                        <div class="bg-slate-900 text-white text-center py-2.5 font-bold text-sm tracking-wider uppercase" id="week2Title">
+                            2. Hafta Menüsü
+                        </div>
+                        <!-- Week 2 Table -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse border border-slate-300">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-700 text-xs font-bold border-b border-slate-300">
+                                        <th class="p-2.5 w-1/4 border border-slate-300 text-center">GÜN</th>
+                                        <th class="p-2.5 w-3/8 border border-slate-300 bg-emerald-50 text-emerald-900">ÖĞLE YEMEĞİ</th>
+                                        <th class="p-2.5 w-3/8 border border-slate-300 bg-amber-50 text-amber-900">AKŞAM YEMEĞİ</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="week2TableBody" class="divide-y divide-slate-300 text-xs">
+                                    <!-- Dynamic rows inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <textarea id="week2Notes" disabled onchange="saveNotes()" class="w-full text-[11px] italic text-slate-600 bg-transparent resize-none focus:outline-none h-10 border-0 p-0" placeholder="Açıklama veya alerjen uyarısı yazınız..."></textarea>
+                    <!-- Week 2 Notes -->
+                    <div class="p-3 bg-slate-50 border-t border-slate-300 mt-auto">
+                        <div class="text-[11px] font-bold text-slate-700 uppercase mb-1">📌 HAZIRLIK & NOTLAR (2. HAFTA)</div>
+                        <div id="week2NotesDisplay" class="text-xs text-slate-600 italic min-h-[36px]"></div>
+                        <textarea id="week2NotesInput" oninput="window.updateLocalData()" class="no-print hidden w-full text-xs p-1.5 border border-slate-300 rounded bg-white mt-1 focus:outline-none focus:ring-1 focus:ring-blue-500" placeholder="2. hafta için notlar..."></textarea>
+                    </div>
                 </div>
+
             </div>
 
         </div>
+    </main>
 
-        <!-- Kaydet Butonu (Yönetici Girişinde Görünür) -->
-        <div id="saveBar" class="mt-4 pt-3 border-t border-slate-200 flex justify-end no-print hidden">
-            <button onclick="saveMenuData()" class="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-extrabold shadow-md transition flex items-center gap-2">
-                <span>💾</span> Değişiklikleri Kaydet
-            </button>
-        </div>
+    <footer class="no-print bg-white border-t border-slate-200 py-3 text-center text-xs text-slate-500">
+        Kurumsal Yemek Menü Sistemi &copy; 2026 - Tüm Hakları Saklıdır.
+    </footer>
 
-    </div>
-
-    <!-- Yönetici Giriş Modalı -->
-    <div id="authModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4 no-print">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 border border-slate-200">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="font-bold text-slate-900 text-base">Yönetici Girişi</h3>
-                <button onclick="toggleAuthModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+    <div id="authModal" class="no-print fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden" onclick="if(event.target === this) window.toggleAuthModal(false);">
+        <div class="bg-white rounded-xl shadow-2xl p-6 max-w-sm w-full mx-4 border border-slate-200">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-slate-900" id="authModalTitle">Yönetici Girişi</h3>
+                <button onclick="window.toggleAuthModal(false)" class="text-slate-400 hover:text-slate-600 text-xl font-bold px-2 py-1">&times;</button>
             </div>
-            <p class="text-xs text-slate-500 mb-4">Menüde düzenleme yapmak için yönetici şifrenizi giriniz.</p>
+            
+            <div id="loginFormSection">
+                <p class="text-xs text-slate-500 mb-4">Menüleri düzenlemek için lütfen yönetici hesabınızla giriş yapın.</p>
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">E-posta Adresi</label>
+                        <input type="email" id="adminEmail" class="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="admin@kurum.com">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Şifre</label>
+                        <input type="password" id="adminPassword" onkeydown="if(event.key==='Enter') window.handleLogin()" class="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="••••••••">
+                    </div>
+                    <button onclick="window.handleLogin()" class="w-full bg-blue-900 hover:bg-blue-800 text-white font-semibold text-xs py-2.5 rounded-lg shadow transition">Giriş Yap</button>
+                    <button onclick="window.toggleAuthModal(false)" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs py-2 rounded-lg transition mt-1">İptal / Kapat</button>
+                </div>
+            </div>
 
-            <form onsubmit="event.preventDefault(); handleLogin();">
-                <div class="mb-4">
-                    <input type="password" id="adminPassword" placeholder="Şifre" class="w-full px-3 py-2.5 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-900">
-                </div>
-                <div class="flex items-center justify-end gap-2">
-                    <button type="button" onclick="toggleAuthModal()" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-xl text-xs font-bold hover:bg-slate-200 transition">İptal</button>
-                    <button type="submit" class="px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-slate-800 transition">Giriş Yap</button>
-                </div>
-            </form>
+            <div id="logoutFormSection" class="hidden text-center space-y-3">
+                <p class="text-xs text-slate-600">Şu anda yönetici olarak oturum açtınız.</p>
+                <button onclick="window.handleLogout()" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold text-xs py-2.5 rounded-lg shadow transition">Oturumu Kapat</button>
+                <button onclick="window.toggleAuthModal(false)" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold text-xs py-2.5 rounded-lg transition">Kapat</button>
+            </div>
         </div>
     </div>
 
-    <!-- Bildirim Kutusu -->
-    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white px-4 py-3 rounded-xl text-xs font-medium shadow-xl transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-3">
-        <span id="toastIcon">ℹ️</span>
-        <span id="toastMessage">İşlem başarılı</span>
-    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    <script>
-        const dayNames = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma"];
-        const monthNames = ["OCAK", "ŞUBAT", "MART", "NİSAN", "MAYIS", "HAZİRAN", "TEMMUZ", "AĞUSTOS", "EYLÜL", "EKİM", "KASIM", "ARALIK"];
-
-        let menuData = {
-            startDate: "2026-10-12",
-            week1Notes: "Sebzeler günlük taze temin edilmektedir. Alerjen uyarıları için mutfak şefine danışabilirsiniz.",
-            week2Notes: "Cuma günü tatlı ikramı mevcuttur. Menüde zeytinyağlı çeşitleri yer almaktadır.",
-            weeks: {
-                week1: {
-                    Pazartesi: {
-                        ogle: "Süzme Mercimek Çorbası\nOrman Kebabı\nPirinç Pilavı\nMevsim Salatası",
-                        aksam: "Domates Çorbası\nFırın Tavuk Baget\nBulgur Pilavı\nCacık"
-                    },
-                    Salı: {
-                        ogle: "Ezogelin Çorbası\nKuru Fasulye\nŞehriyeli Pilav\nKarışık Turşu",
-                        aksam: "Şehriye Çorbası\nEtli Taze Fasulye\nMakarna\nYoğurt"
-                    },
-                    Çarşamba: {
-                        ogle: "Tarhana Çorbası\nIzgara Köfte\nPatates Tava\nKemalpaşa Tatlısı",
-                        aksam: "Yayla Çorbası\nSebzeli Güveç\nPirinç Pilavı\nMeyve"
-                    },
-                    Perşembe: {
-                        ogle: "Yayla Çorbası\nEt Sote\nBulgur Pilavı\nAyran",
-                        aksam: "Mercimek Çorbası\nTavuk Sote\nErişte\nSütlaç"
-                    },
-                    Cuma: {
-                        ogle: "Mantar Çorbası\nKadınbudu Köfte\nMakarna\nKomposto",
-                        aksam: "Ezogelin Çorbası\nFırın Balık\nPatates Salatası\nHelva"
-                    }
-                },
-                week2: {
-                    Pazartesi: {
-                        ogle: "Domates Çorbası\nTavuk Döner\nPirinç Pilavı\nAyran",
-                        aksam: "Mercimek Çorbası\nKarnıyarık\nŞehriyeli Pilav\nCacık"
-                    },
-                    Salı: {
-                        ogle: "Şehriye Çorbası\nİzmir Köfte\nBulgur Pilavı\nYoğurt",
-                        aksam: "Tarhana Çorbası\nBezelye Yemeği\nMakarna\nMeyve"
-                    },
-                    Çarşamba: {
-                        ogle: "Sebze Çorbası\nTas Kebabı\nPatates Püresi\nRevani",
-                        aksam: "Mantar Çorbası\nFırın Tavuk Budu\nPirinç Pilavı\nAyran"
-                    },
-                    Perşembe: {
-                        ogle: "Süzme Mercimek\nNohut Yemeği\nPirinç Pilavı\nCacık",
-                        aksam: "Ezogelin Çorbası\nMantar Sote\nBulgur Pilavı\nYoğurt"
-                    },
-                    Cuma: {
-                        ogle: "Tavuk Suyu Çorba\nHünkâr Beğendi\nBulgur Pilavı\nTrileçe",
-                        aksam: "Domates Çorbası\nSebzeli Köfte\nMakarna\nMevsim Salatası"
-                    }
-                }
-            }
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDUIM_atuPby1ez987JvKQEW0oyZR9Jpnk",
+            authDomain: "yemek-menusu-71ec7.firebaseapp.com",
+            databaseURL: "https://yemek-menusu-71ec7-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "yemek-menusu-71ec7",
+            storageBucket: "yemek-menusu-71ec7.firebasestorage.app",
+            messagingSenderId: "217507204310",
+            appId: "1:217507204310:web:035ceb50ad16775d49cd77"
         };
 
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const DAYS = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma"];
+        const MONTHS = ["OCAK", "ŞUBAT", "MART", "NİSAN", "MAYIS", "HAZİRAN", "TEMMUZ", "AĞUSTOS", "EYLÜL", "EKİM", "KASIM", "ARALIK"];
+
+        // State variables
+        let currentStartDate = getComingMonday();
+        let menuData = getInitialMenuData();
         let isAdmin = false;
 
-        window.onload = function() {
-            const saved = localStorage.getItem('kurumsal_yemek_menusu_v4');
-            if (saved) {
-                try { menuData = JSON.parse(saved); } catch(e) {}
-            }
-            document.getElementById('startDateInput').value = menuData.startDate;
-            renderTables();
-        };
-
-        function formatDateStr(dateObj) {
-            const d = String(dateObj.getDate()).padStart(2, '0');
-            const m = String(dateObj.getMonth() + 1).padStart(2, '0');
-            const y = dateObj.getFullYear();
-            return `${d}.${m}.${y}`;
+        function getComingMonday() {
+            const d = new Date();
+            const day = d.getDay();
+            const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+            const monday = new Date(d.setDate(diff));
+            return monday.toISOString().split('T')[0];
         }
 
-        function updateDates() {
-            const val = document.getElementById('startDateInput').value;
-            if (!val) return;
-            menuData.startDate = val;
-            renderTables();
-            showToast("Tarihler güncellendi", "success");
-        }
-
-        function getCalculatedDates() {
-            const startStr = menuData.startDate || "2026-10-12";
-            const baseDate = new Date(startStr);
-            if (isNaN(baseDate.getTime())) return { w1Dates: [], w2Dates: [], overallRange: "" };
-
-            let w1Dates = [];
-            let w2Dates = [];
-
-            for (let i = 0; i < 5; i++) {
-                let d1 = new Date(baseDate);
-                d1.setDate(baseDate.getDate() + i);
-                w1Dates.push(formatDateStr(d1));
-
-                let d2 = new Date(baseDate);
-                d2.setDate(baseDate.getDate() + 7 + i);
-                w2Dates.push(formatDateStr(d2));
-            }
-
-            const m1Name = monthNames[parseInt(w1Dates[0].substring(3, 5)) - 1];
-            const m2Name = monthNames[parseInt(w2Dates[0].substring(3, 5)) - 1];
-
+        function getInitialMenuData() {
             return {
-                w1Dates,
-                w2Dates,
-                overallRange: `${w1Dates[0]} - ${w2Dates[4]}`,
-                w1Title: `${parseInt(w1Dates[0].substring(0,2))} - ${parseInt(w1Dates[4].substring(0,2))} ${m1Name} ${w1Dates[0].substring(6,10)}`,
-                w2Title: `${parseInt(w2Dates[0].substring(0,2))} - ${parseInt(w2Dates[4].substring(0,2))} ${m2Name} ${w2Dates[0].substring(6,10)}`
+                week1: {
+                    notes: "Sebzeler günlük taze temin edilmektedir. Alerjen uyarıları için mutfak şefine danışabilirsiniz.",
+                    days: [
+                        { lunch: "• Süzme Mercimek Çorbası\n• Orman Kebabı\n• Pirinç Pilavı\n• Mevsim Salatası", dinner: "• Domates Çorbası\n• Fırın Tavuk Baget\n• Bulgur Pilavı\n• Cacık" },
+                        { lunch: "• Ezogelin Çorbası\n• Kuru Fasulye\n• Şehriyeli Pilav\n• Karışık Turşu", dinner: "• Şehriye Çorbası\n• Etli Taze Fasulye\n• Makarna\n• Yoğurt" },
+                        { lunch: "• Tarhana Çorbası\n• Izgara Köfte\n• Patates Tava\n• Kemalpaşa Tatlısı", dinner: "• Yayla Çorbası\n• Sebzeli Güveç\n• Pirinç Pilavı\n• Meyve" },
+                        { lunch: "• Yayla Çorbası\n• Et Sote\n• Bulgur Pilavı\n• Ayran", dinner: "• Mercimek Çorbası\n• Tavuk Sote\n• Erişte\n• Sütlaç" },
+                        { lunch: "• Mantar Çorbası\n• Kadınbudu Köfte\n• Makarna\n• Komposto", dinner: "• Ezogelin Çorbası\n• Fırın Balık\n• Patates Salatası\n• Helva" }
+                    ]
+                },
+                week2: {
+                    notes: "Cuma günü tatlı ikramı mevcuttur. Menüde zeytinyağlı çeşitleri yer almaktadır.",
+                    days: [
+                        { lunch: "• Domates Çorbası\n• Tavuk Döner\n• Pirinç Pilavı\n• Ayran", dinner: "• Mercimek Çorbası\n• Karnıyarık\n• Şehriyeli Pilav\n• Cacık" },
+                        { lunch: "• Şehriye Çorbası\n• İzmir Köfte\n• Bulgur Pilavı\n• Yoğurt", dinner: "• Tarhana Çorbası\n• Bezelye Yemeği\n• Makarna\n• Meyve" },
+                        { lunch: "• Sebze Çorbası\n• Tas Kebabı\n• Patates Püresi\n• Revani", dinner: "• Mantar Çorbası\n• Fırın Tavuk Budu\n• Pirinç Pilavı\n• Ayran" },
+                        { lunch: "• Süzme Mercimek\n• Nohut Yemeği\n• Pirinç Pilavı\n• Cacık", dinner: "• Ezogelin Çorbası\n• Mantar Sote\n• Bulgur Pilavı\n• Yoğurt" },
+                        { lunch: "• Tavuk Suyu Çorba\n• Hünkâr Beğendi\n• Bulgur Pilavı\n• Trileçe", dinner: "• Domates Çorbası\n• Sebzeli Köfte\n• Makarna\n• Mevsim Salatası" }
+                    ]
+                }
             };
         }
 
-        function renderTables() {
-            const dates = getCalculatedDates();
-
-            document.getElementById('overallDateRange').innerText = dates.overallRange;
-            document.getElementById('week1HeaderTitle').innerText = dates.w1Title;
-            document.getElementById('week2HeaderTitle').innerText = dates.w2Title;
-
-            document.getElementById('week1Notes').value = menuData.week1Notes || "";
-            document.getElementById('week2Notes').value = menuData.week2Notes || "";
-
-            renderWeekTable('week1', dates.w1Dates);
-            renderWeekTable('week2', dates.w2Dates);
+        function formatDateStr(dateStr) {
+            if (!dateStr) return "";
+            const parts = dateStr.split("-");
+            if (parts.length === 3) return `${parts[2]}.${parts[1]}.${parts[0]}`;
+            return dateStr;
         }
 
-        function renderWeekTable(weekKey, dateList) {
-            const tbody = document.getElementById(`${weekKey}TableBody`);
-            tbody.innerHTML = '';
+        function addDays(dateStr, days) {
+            const result = new Date(dateStr);
+            result.setDate(result.getDate() + days);
+            return result.toISOString().split('T')[0];
+        }
 
-            dayNames.forEach((day, index) => {
-                const dateStr = dateList[index];
-                const dayData = menuData.weeks[weekKey][day] || { ogle: "", aksam: "" };
+        function renderApp() {
+            const startDateInput = document.getElementById('startDateInput');
+            if (startDateInput && startDateInput.value !== currentStartDate) {
+                startDateInput.value = currentStartDate;
+            }
 
-                const tr = document.createElement('tr');
-                tr.className = "border-b border-slate-200 hover:bg-slate-50/50";
-                
-                tr.innerHTML = `
-                    <td class="p-2 border-r border-slate-300 text-center align-middle bg-slate-50/50">
-                        <div class="font-extrabold text-slate-900 text-xs">${day}</div>
-                        <div class="text-[10px] font-semibold text-slate-500 mt-0.5">${dateStr}</div>
-                    </td>
-                    <td class="p-2 border-r border-slate-300 align-top">${createMealCellHtml(weekKey, day, 'ogle', dayData.ogle)}</td>
-                    <td class="p-2 align-top">${createMealCellHtml(weekKey, day, 'aksam', dayData.aksam)}</td>
+            const w1Mon = currentStartDate;
+            const w1Fri = addDays(w1Mon, 4);
+            const w2Mon = addDays(w1Mon, 7);
+            const w2Fri = addDays(w2Mon, 4);
+
+            const w1MonObj = new Date(w1Mon);
+            const w1FriObj = new Date(w1Fri);
+            const w2MonObj = new Date(w2Mon);
+            const w2FriObj = new Date(w2Fri);
+
+            document.getElementById('week1Title').innerText = `${w1MonObj.getDate()} - ${w1FriObj.getDate()} ${MONTHS[w1FriObj.getMonth()]} ${w1FriObj.getFullYear()}`;
+            document.getElementById('week2Title').innerText = `${w2MonObj.getDate()} - ${w2FriObj.getDate()} ${MONTHS[w2FriObj.getMonth()]} ${w2FriObj.getFullYear()}`;
+            document.getElementById('dateRangeDisplay').innerText = `Dönem: ${formatDateStr(w1Mon)} - ${formatDateStr(w2Fri)}`;
+
+            // Week 1 Table
+            let w1Html = '';
+            for (let i = 0; i < 5; i++) {
+                const dayDate = addDays(w1Mon, i);
+                const dayData = menuData.week1.days[i] || { lunch: '', dinner: '' };
+                w1Html += `
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-2.5 border border-slate-300 text-center font-medium bg-slate-50/50 align-middle">
+                            <div class="font-bold text-slate-800">${DAYS[i]}</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">${formatDateStr(dayDate)}</div>
+                        </td>
+                        <td class="p-2.5 border border-slate-300 bg-emerald-50/20 align-top">
+                            <div class="view-mode whitespace-pre-line text-slate-700">${escapeHtml(dayData.lunch)}</div>
+                            <textarea oninput="window.handleMealInput(1, ${i}, 'lunch', this.value)" class="edit-mode hidden w-full p-1 text-xs border border-slate-300 rounded bg-white focus:outline-none focus:ring-1 focus:ring-blue-500" rows="4">${dayData.lunch}</textarea>
+                        </td>
+                        <td class="p-2.5 border border-slate-300 bg-amber-50/20 align-top">
+                            <div class="view-mode whitespace-pre-line text-slate-700">${escapeHtml(dayData.dinner)}</div>
+                            <textarea oninput="window.handleMealInput(1, ${i}, 'dinner', this.value)" class="edit-mode hidden w-full p-1 text-xs border border-slate-300 rounded bg-white focus:outline-none focus:ring-1 focus:ring-blue-500" rows="4">${dayData.dinner}</textarea>
+                        </td>
+                    </tr>
                 `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function createMealCellHtml(weekKey, day, mealTime, textValue) {
-            if (!isAdmin) {
-                const items = (textValue || "").split("\n").filter(i => i.trim() !== "");
-                if (items.length === 0) return `<span class="text-slate-400 italic">-</span>`;
-                return items.map(item => `<div class="meal-list-item text-slate-800 font-medium leading-relaxed">${item.trim()}</div>`).join('');
             }
+            document.getElementById('week1TableBody').innerHTML = w1Html;
 
-            return `<textarea onchange="updateMenuData('${weekKey}', '${day}', '${mealTime}', this.value)" 
-                class="w-full text-xs font-medium bg-white border border-slate-300 rounded p-1 focus:outline-none focus:ring-1 focus:ring-slate-900 resize-none h-16">${textValue || ''}</textarea>`;
-        }
-
-        function updateMenuData(weekKey, day, mealTime, val) {
-            if (!menuData.weeks[weekKey][day]) {
-                menuData.weeks[weekKey][day] = {};
+            // Week 2 Table
+            let w2Html = '';
+            for (let i = 0; i < 5; i++) {
+                const dayDate = addDays(w2Mon, i);
+                const dayData = menuData.week2.days[i] || { lunch: '', dinner: '' };
+                w2Html += `
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-2.5 border border-slate-300 text-center font-medium bg-slate-50/50 align-middle">
+                            <div class="font-bold text-slate-800">${DAYS[i]}</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">${formatDateStr(dayDate)}</div>
+                        </td>
+                        <td class="p-2.5 border border-slate-300 bg-emerald-50/20 align-top">
+                            <div class="view-mode whitespace-pre-line text-slate-700">${escapeHtml(dayData.lunch)}</div>
+                            <textarea oninput="window.handleMealInput(2, ${i}, 'lunch', this.value)" class="edit-mode hidden w-full p-1 text-xs border border-slate-300 rounded bg-white focus:outline-none focus:ring-1 focus:ring-blue-500" rows="4">${dayData.lunch}</textarea>
+                        </td>
+                        <td class="p-2.5 border border-slate-300 bg-amber-50/20 align-top">
+                            <div class="view-mode whitespace-pre-line text-slate-700">${escapeHtml(dayData.dinner)}</div>
+                            <textarea oninput="window.handleMealInput(2, ${i}, 'dinner', this.value)" class="edit-mode hidden w-full p-1 text-xs border border-slate-300 rounded bg-white focus:outline-none focus:ring-1 focus:ring-blue-500" rows="4">${dayData.dinner}</textarea>
+                        </td>
+                    </tr>
+                `;
             }
-            menuData.weeks[weekKey][day][mealTime] = val;
-        }
+            document.getElementById('week2TableBody').innerHTML = w2Html;
 
-        function saveNotes() {
-            menuData.week1Notes = document.getElementById('week1Notes').value;
-            menuData.week2Notes = document.getElementById('week2Notes').value;
-        }
+            document.getElementById('week1NotesDisplay').innerText = menuData.week1.notes || '';
+            document.getElementById('week1NotesInput').value = menuData.week1.notes || '';
+            document.getElementById('week2NotesDisplay').innerText = menuData.week2.notes || '';
+            document.getElementById('week2NotesInput').value = menuData.week2.notes || '';
 
-        function toggleAuthModal() {
-            const modal = document.getElementById('authModal');
+            const viewElements = document.querySelectorAll('.view-mode');
+            const editElements = document.querySelectorAll('.edit-mode');
+            const editIndicator = document.getElementById('editModeIndicator');
+            const saveMenuBtn = document.getElementById('saveMenuBtn');
+            const w1NotesInput = document.getElementById('week1NotesInput');
+            const w1NotesDisplay = document.getElementById('week1NotesDisplay');
+            const w2NotesInput = document.getElementById('week2NotesInput');
+            const w2NotesDisplay = document.getElementById('week2NotesDisplay');
+
             if (isAdmin) {
-                isAdmin = false;
-                document.getElementById('authBtnText').innerText = "Yönetici Girişi";
-                document.getElementById('saveBar').classList.add('hidden');
-                document.getElementById('week1Notes').disabled = true;
-                document.getElementById('week2Notes').disabled = true;
-                renderTables();
-                showToast("Yönetici oturumu kapatıldı", "info");
+                viewElements.forEach(el => el.classList.add('hidden'));
+                editElements.forEach(el => el.classList.remove('hidden'));
+                editIndicator.classList.remove('hidden');
+                saveMenuBtn.classList.remove('hidden');
+                w1NotesInput.classList.remove('hidden');
+                w1NotesDisplay.classList.add('hidden');
+                w2NotesInput.classList.remove('hidden');
+                w2NotesDisplay.classList.add('hidden');
             } else {
+                viewElements.forEach(el => el.classList.remove('hidden'));
+                editElements.forEach(el => el.classList.add('hidden'));
+                editIndicator.classList.add('hidden');
+                saveMenuBtn.classList.add('hidden');
+                w1NotesInput.classList.add('hidden');
+                w1NotesDisplay.classList.remove('hidden');
+                w2NotesInput.classList.add('hidden');
+                w2NotesDisplay.classList.remove('hidden');
+            }
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        async function fetchMenuFromCloud() {
+            try {
+                const docRef = doc(db, "artifacts", "yemek-menusu-71ec7", "menuStore", currentStartDate);
+                const snap = await getDoc(docRef);
+                if (snap.exists()) {
+                    menuData = snap.data();
+                    showBanner("Menü buluttan başarıyla yüklendi.", "success");
+                } else {
+                    showBanner("Bu hafta için bulutta kayıtlı menü bulunamadı, varsayılan menü gösteriliyor.", "info");
+                }
+                renderApp();
+            } catch (err) {
+                console.error("Firestore okuma hatası:", err);
+                showBanner("Buluttan veri okunurken hata oluştu (Yerel mod aktif).", "error");
+                renderApp();
+            }
+        }
+
+        window.saveMenuToCloud = async function() {
+            if (!isAdmin) {
+                showBanner("Bu işlem için yönetici yetkisi gereklidir.", "error");
+                return;
+            }
+            try {
+                const docRef = doc(db, "artifacts", "yemek-menusu-71ec7", "menuStore", currentStartDate);
+                await setDoc(docRef, menuData);
+                showBanner("Menü başarıyla Firestore veritabanına kaydedildi!", "success");
+            } catch (err) {
+                console.error("Firestore yazma hatası:", err);
+                showBanner("Menü kaydedilemedi! Firestore kurallarını kontrol edin.", "error");
+            }
+        }
+
+        window.onDateChange = function(newDate) {
+            if (!newDate) return;
+            currentStartDate = newDate;
+            fetchMenuFromCloud();
+        }
+
+        window.handleMealInput = function(weekNum, dayIndex, mealType, value) {
+            if (weekNum === 1) {
+                menuData.week1.days[dayIndex][mealType] = value;
+            } else {
+                menuData.week2.days[dayIndex][mealType] = value;
+            }
+        }
+
+        window.updateLocalData = function() {
+            menuData.week1.notes = document.getElementById('week1NotesInput').value;
+            menuData.week2.notes = document.getElementById('week2NotesInput').value;
+        }
+
+        window.toggleAuthModal = function(show) {
+            const modal = document.getElementById('authModal');
+            if (show) {
                 modal.classList.remove('hidden');
-                modal.classList.add('flex');
-                document.getElementById('adminPassword').value = '';
-                setTimeout(() => {
-                    document.getElementById('adminPassword').focus();
-                }, 50);
-            }
-        }
-
-        function handleLogin() {
-            const passInput = document.getElementById('adminPassword');
-            const pass = passInput ? passInput.value : "";
-
-            if (pass === "123") {
-                isAdmin = true;
-                document.getElementById('authBtnText').innerText = "Çıkış Yap";
-                document.getElementById('saveBar').classList.remove('hidden');
-                document.getElementById('week1Notes').disabled = false;
-                document.getElementById('week2Notes').disabled = false;
-                
-                const modal = document.getElementById('authModal');
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-                
-                renderTables();
-                showToast("Yönetici girişi başarılı!", "success");
             } else {
-                showToast("Hatalı şifre!", "error");
+                modal.classList.add('hidden');
             }
         }
 
-        function saveMenuData() {
-            saveNotes();
-            localStorage.setItem('kurumsal_yemek_menusu_v4', JSON.stringify(menuData));
-            showToast("Menü başarıyla kaydedildi!", "success");
+        window.handleLogin = async function() {
+            const email = document.getElementById('adminEmail').value.trim();
+            const password = document.getElementById('adminPassword').value;
+            if (!email || !password) {
+                showBanner("Lütfen e-posta ve şifrenizi girin.", "error");
+                return;
+            }
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                window.toggleAuthModal(false);
+                showBanner("Yönetici girişi başarılı.", "success");
+            } catch (err) {
+                console.error("Giriş hatası:", err);
+                showBanner("Giriş başarısız! E-posta veya şifre hatalı.", "error");
+            }
         }
 
-        function showToast(message, type = "success") {
-            const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toastMessage');
-            const toastIcon = document.getElementById('toastIcon');
-
-            toastMsg.innerText = message;
-            toastIcon.innerText = type === "success" ? "✅" : type === "error" ? "❌" : "ℹ️";
-
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
+        window.handleLogout = async function() {
+            try {
+                await signOut(auth);
+                window.toggleAuthModal(false);
+                showBanner("Oturum kapatıldı.", "success");
+            } catch (err) {
+                console.error("Çıkış hatası:", err);
+            }
         }
+
+        window.printMenu = function() {
+            window.print();
+        }
+
+        function showBanner(msg, type) {
+            const banner = document.getElementById('statusBanner');
+            const msgEl = document.getElementById('statusMessage');
+            msgEl.innerText = msg;
+            banner.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'bg-red-100', 'text-red-800', 'bg-blue-100', 'text-blue-800');
+            if (type === 'success') {
+                banner.classList.add('bg-emerald-100', 'text-emerald-800');
+            } else if (type === 'error') {
+                banner.classList.add('bg-red-100', 'text-red-800');
+            } else {
+                banner.classList.add('bg-blue-100', 'text-blue-800');
+            }
+            setTimeout(() => banner.classList.add('hidden'), 5000);
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            const authBtnText = document.getElementById('authBtnText');
+            const loginForm = document.getElementById('loginFormSection');
+            const logoutForm = document.getElementById('logoutFormSection');
+            const authModalTitle = document.getElementById('authModalTitle');
+
+            if (user) {
+                isAdmin = true;
+                authBtnText.innerText = "Yönetici (Çıkış)";
+                authModalTitle.innerText = "Yönetici Oturumu";
+                loginForm.classList.add('hidden');
+                logoutForm.classList.remove('hidden');
+            } else {
+                isAdmin = false;
+                authBtnText.innerText = "Yönetici Girişi";
+                authModalTitle.innerText = "Yönetici Girişi";
+                loginForm.classList.remove('hidden');
+                logoutForm.classList.add('hidden');
+            }
+            renderApp();
+        });
+
+        fetchMenuFromCloud();
     </script>
 </body>
 </html>
