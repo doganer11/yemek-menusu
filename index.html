@@ -68,7 +68,7 @@
             <div class="flex items-center space-x-3 flex-wrap gap-y-2">
                 <div class="flex items-center space-x-2 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
                     <label for="startDateInput" class="text-xs font-medium text-slate-300">Başlangıç Pazartesi:</label>
-                    <input type="date" id="startDateInput" onchange="window.onDateChange(this.value)" class="bg-slate-700 text-white text-xs rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                    <input type="date" id="startDateInput" onchange="window.onDateChange(this.value)" class="bg-slate-700 text-white text-xs rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-60 disabled:cursor-not-allowed">
                 </div>
 
                 <!-- Admin Login Button -->
@@ -296,6 +296,10 @@
             const startDateInput = document.getElementById('startDateInput');
             if (startDateInput && startDateInput.value !== currentStartDate) {
                 startDateInput.value = currentStartDate;
+            }
+
+            if (startDateInput) {
+                startDateInput.disabled = !isAdmin;
             }
 
             const w1Mon = currentStartDate;
