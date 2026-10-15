@@ -84,10 +84,13 @@
                     </select>
                 </div>
 
-                <!-- Admin Date Picker -->
+                <!-- Admin Date Picker & Create Period Button Container -->
                 <div id="adminDateContainer" class="hidden flex items-center space-x-2 bg-blue-950 px-3 py-1.5 rounded-lg border border-blue-700">
                     <label for="startDateInput" class="text-xs font-medium text-blue-200">Hedef Pazartesi:</label>
                     <input type="date" id="startDateInput" onchange="window.onAdminDateChange(this.value)" class="bg-blue-900 text-white text-xs rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-400">
+                    <button onclick="window.createNewPeriod()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-2.5 py-1 rounded shadow transition flex items-center space-x-1" title="Seçilen tarih için boş yeni dönem oluştur">
+                        <span>+ Yeni Dönem</span>
+                    </button>
                 </div>
 
                 <!-- Admin Login Button -->
@@ -99,7 +102,7 @@
                 </button>
 
                 <!-- Print / PDF Button -->
-                <button onclick="window.printMenu()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-4 py-2 rounded-lg shadow transition flex items-center space-x-1.5">
+                <button onclick="window.printMenu()" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-semibold px-4 py-2 rounded-lg shadow transition flex items-center space-x-1.5">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
                     </svg>
@@ -281,10 +284,10 @@
         const MONTHS = ["OCAK", "ŞUBAT", "MART", "NİSAN", "MAYIS", "HAZİRAN", "TEMMUZ", "AĞUSTOS", "EYLÜL", "EKİM", "KASIM", "ARALIK"];
 
         let currentStartDate = getComingMonday();
-        let menuData = getInitialMenuData();
+        let menuData = getEmptyMenuData();
         let isAdmin = false;
         let savedWeeksList = [];
-        let allSavedMenusCache = {}; // Cache for search functionality
+        let allSavedMenusCache = {};
 
         function getComingMonday() {
             const d = new Date();
@@ -294,26 +297,26 @@
             return monday.toISOString().split('T')[0];
         }
 
-        function getInitialMenuData() {
+        function getEmptyMenuData() {
             return {
                 week1: {
-                    notes: "Sebzeler günlük taze temin edilmektedir. Alerjen uyarıları için mutfak şefine danışabilirsiniz.",
+                    notes: "",
                     days: [
-                        { lunch: "• Süzme Mercimek Çorbası\n• Orman Kebabı\n• Pirinç Pilavı\n• Mevsim Salatası", dinner: "• Domates Çorbası\n• Fırın Tavuk Baget\n• Bulgur Pilavı\n• Cacık" },
-                        { lunch: "• Ezogelin Çorbası\n• Kuru Fasulye\n• Şehriyeli Pilav\n• Karışık Turşu", dinner: "• Şehriye Çorbası\n• Etli Taze Fasulye\n• Makarna\n• Yoğurt" },
-                        { lunch: "• Tarhana Çorbası\n• Izgara Köfte\n• Patates Tava\n• Kemalpaşa Tatlısı", dinner: "• Yayla Çorbası\n• Sebzeli Güveç\n• Pirinç Pilavı\n• Meyve" },
-                        { lunch: "• Yayla Çorbası\n• Et Sote\n• Bulgur Pilavı\n• Ayran", dinner: "• Mercimek Çorbası\n• Tavuk Sote\n• Erişte\n• Sütlaç" },
-                        { lunch: "• Mantar Çorbası\n• Kadınbudu Köfte\n• Makarna\n• Komposto", dinner: "• Ezogelin Çorbası\n• Fırın Balık\n• Patates Salatası\n• Helva" }
+                        { lunch: "", dinner: "" },
+                        { lunch: "", dinner: "" },
+                        { lunch: "", dinner: "" },
+                        { lunch: "", dinner: "" },
+                        { lunch: "", dinner: "" }
                     ]
                 },
                 week2: {
-                    notes: "Cuma günü tatlı ikramı mevcuttur. Menüde zeytinyağlı çeşitleri yer almaktadır.",
+                    notes: "",
                     days: [
-                        { lunch: "• Domates Çorbası\n• Tavuk Döner\n• Pirinç Pilavı\n• Ayran", dinner: "• Mercimek Çorbası\n• Karnıyarık\n• Şehriyeli Pilav\n• Cacık" },
-                        { lunch: "• Şehriye Çorbası\n• İzmir Köfte\n• Bulgur Pilavı\n• Yoğurt", dinner: "• Tarhana Çorbası\n• Bezelye Yemeği\n• Makarna\n• Meyve" },
-                        { lunch: "• Sebze Çorbası\n• Tas Kebabı\n• Patates Püresi\n• Revani", dinner: "• Mantar Çorbası\n• Fırın Tavuk Budu\n• Pirinç Pilavı\n• Ayran" },
-                        { lunch: "• Süzme Mercimek\n• Nohut Yemeği\n• Pirinç Pilavı\n• Cacık", dinner: "• Ezogelin Çorbası\n• Mantar Sote\n• Bulgur Pilavı\n• Yoğurt" },
-                        { lunch: "• Tavuk Suyu Çorba\n• Hünkâr Beğendi\n• Bulgur Pilavı\n• Trileçe", dinner: "• Domates Çorbası\n• Sebzeli Köfte\n• Makarna\n• Mevsim Salatası" }
+                        { lunch: "", dinner: "" },
+                        { lunch: "", dinner: "" },
+                        { lunch: "", dinner: "" },
+                        { lunch: "", dinner: "" },
+                        { lunch: "", dinner: "" }
                     ]
                 }
             };
@@ -349,27 +352,45 @@
                     });
                 }
                 
-                if (!savedWeeksList.includes(currentStartDate)) {
-                    savedWeeksList.push(currentStartDate);
-                    allSavedMenusCache[currentStartDate] = menuData;
-                }
-
                 savedWeeksList.sort();
 
-                updateSavedWeeksDropdown(targetDateToSelect || currentStartDate);
+                if (savedWeeksList.length > 0) {
+                    const selectDate = (targetDateToSelect && savedWeeksList.includes(targetDateToSelect)) 
+                        ? targetDateToSelect 
+                        : savedWeeksList[0];
+                    currentStartDate = selectDate;
+                    menuData = allSavedMenusCache[currentStartDate] || getEmptyMenuData();
+                    updateSavedWeeksDropdown(currentStartDate);
+                    renderApp();
+                } else {
+                    savedWeeksList = [];
+                    allSavedMenusCache = {};
+                    updateSavedWeeksDropdown(null);
+                    menuData = getEmptyMenuData();
+                    renderApp();
+                    if (isAdmin) {
+                        showBanner("Bulutta kayıtlı dönem bulunmuyor. '+ Yeni Dönem' butonunu kullanarak yeni dönem oluşturabilirsiniz.", "info");
+                    } else {
+                        showBanner("Şu anda sistemde kayıtlı yemek menüsü bulunmamaktadır.", "info");
+                    }
+                }
             } catch (err) {
                 console.warn("Kayıtlı haftalar listesi alınamadı:", err);
-                if (!savedWeeksList.includes(currentStartDate)) {
-                    savedWeeksList.push(currentStartDate);
-                    allSavedMenusCache[currentStartDate] = menuData;
-                }
-                updateSavedWeeksDropdown(currentStartDate);
+                savedWeeksList = [];
+                allSavedMenusCache = {};
+                updateSavedWeeksDropdown(null);
+                renderApp();
             }
         }
 
         function updateSavedWeeksDropdown(selectedDate) {
             const selectEl = document.getElementById('savedWeeksSelect');
             if (!selectEl) return;
+
+            if (savedWeeksList.length === 0) {
+                selectEl.innerHTML = `<option value="">Kayıtlı Dönem Yok</option>`;
+                return;
+            }
 
             let html = '';
             savedWeeksList.forEach(dateStr => {
@@ -504,25 +525,48 @@
         }
 
         async function fetchMenuForDate(dateStr) {
+            if (!dateStr) return;
             currentStartDate = dateStr;
-            try {
-                const menuRef = ref(db, 'menus/menu_' + currentStartDate);
-                const snap = await get(menuRef);
-                if (snap.exists()) {
-                    menuData = snap.val();
-                    showBanner(`Seçilen dönem menüsü yüklendi (${formatDateStr(currentStartDate)}).`, "success");
-                } else {
-                    menuData = getInitialMenuData();
-                    allSavedMenusCache[currentStartDate] = JSON.parse(JSON.stringify(menuData));
-                    showBanner(`Bu dönem için bulutta kayıtlı menü bulunamadı, örnek 2 haftalık menü yüklendi.`, "info");
+            if (allSavedMenusCache[currentStartDate]) {
+                menuData = allSavedMenusCache[currentStartDate];
+                showBanner(`Seçilen dönem yüklendi (${formatDateStr(currentStartDate)}).`, "success");
+            } else {
+                try {
+                    const menuRef = ref(db, 'menus/menu_' + currentStartDate);
+                    const snap = await get(menuRef);
+                    if (snap.exists()) {
+                        menuData = snap.val();
+                        allSavedMenusCache[currentStartDate] = menuData;
+                        showBanner(`Seçilen dönem yüklendi (${formatDateStr(currentStartDate)}).`, "success");
+                    } else {
+                        menuData = getEmptyMenuData();
+                        if (isAdmin) {
+                            showBanner(`Bu tarih için bulutta kayıtlı menü yok. '+ Yeni Dönem' butonuna basarak oluşturabilirsiniz.`, "info");
+                        } else {
+                            showBanner(`Bu döneme ait kayıtlı menü bulunamadı.`, "error");
+                        }
+                    }
+                } catch (err) {
+                    console.warn("Bulut verisi yüklenemedi:", err);
+                    menuData = getEmptyMenuData();
                 }
-            } catch (err) {
-                console.warn("Bulut verisi yüklenemedi:", err);
-                menuData = getInitialMenuData();
-                showBanner("Bulut bağlantı uyarısı: Örnek menü gösteriliyor.", "info");
             }
             renderApp();
             updateSavedWeeksDropdown(currentStartDate);
+        }
+
+        window.createNewPeriod = function() {
+            if (!isAdmin) return;
+            const dateInputVal = document.getElementById('startDateInput').value;
+            if (!dateInputVal) {
+                showBanner("Lütfen geçerli bir başlangıç tarihi seçin.", "error");
+                return;
+            }
+            currentStartDate = dateInputVal;
+            menuData = getEmptyMenuData();
+            renderApp();
+            updateSavedWeeksDropdown(currentStartDate);
+            showBanner(`${formatDateStr(currentStartDate)} dönemi için yeni boş menü oluşturuldu. Doldurup 'Menüyü Buluta Kaydet' butonuna basabilirsiniz.`, "success");
         }
 
         window.onSelectArchivedWeek = function(dateStr) {
@@ -532,7 +576,16 @@
 
         window.onAdminDateChange = function(newDate) {
             if (!newDate) return;
-            fetchMenuForDate(newDate);
+            currentStartDate = newDate;
+            if (allSavedMenusCache[currentStartDate]) {
+                menuData = allSavedMenusCache[currentStartDate];
+                showBanner(`Kayıtlı ${formatDateStr(currentStartDate)} dönemi yüklendi.`, "success");
+            } else {
+                menuData = getEmptyMenuData();
+                showBanner(`Tarih değiştirildi (${formatDateStr(currentStartDate)}). Yeni dönem oluşturmak için '+ Yeni Dönem' butonuna basabilirsiniz.`, "info");
+            }
+            renderApp();
+            updateSavedWeeksDropdown(currentStartDate);
         }
 
         window.saveMenuToCloud = async function() {
@@ -571,7 +624,7 @@
 
             try {
                 const menuRef = ref(db, 'menus/menu_' + currentStartDate);
-                await set(menuRef, null); // remove from Firebase
+                await set(menuRef, null);
                 delete allSavedMenusCache[currentStartDate];
                 showBanner(`${formatDateStr(currentStartDate)} dönemi silindi.`, "success");
                 
@@ -580,7 +633,7 @@
                     await fetchMenuForDate(savedWeeksList[0]);
                 } else {
                     currentStartDate = getComingMonday();
-                    menuData = getInitialMenuData();
+                    menuData = getEmptyMenuData();
                     renderApp();
                 }
             } catch (err) {
