@@ -223,7 +223,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDUIM_atuPby1ez987JvKQEW0oyZR9Jpnk",
@@ -237,7 +237,7 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        const db = getFirestore(app);
+        const db = getDatabase(app);
 
         const DAYS = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma"];
         const MONTHS = ["OCAK", "ŞUBAT", "MART", "NİSAN", "MAYIS", "HAZİRAN", "TEMMUZ", "AĞUSTOS", "EYLÜL", "EKİM", "KASIM", "ARALIK"];
@@ -407,16 +407,19 @@
 
         async function fetchMenuFromCloud() {
             try {
-                const docRef = doc(db, "menus", "menu_" + currentStartDate);
-                const snap = await getDoc(docRef);
+                const menuRef = ref(db, 'menus/menu_' + currentStartDate);
+                const snap = await get(menuRef);
                 if (snap.exists()) {
-                    menuData = snap.data();
+                    menuData = snap.val();
                     showBanner("Menü buluttan başarıyla yüklendi.", "success");
                 } else {
+                    menuData = getInitialMenuData();
                     showBanner("Bu hafta için bulutta kayıtlı menü bulunamadı, varsayılan menü gösteriliyor.", "info");
                 }
             } catch (err) {
                 console.warn("Bulut verisi yüklenemedi:", err);
+                menuData = getInitialMenuData();
+                showBanner("Bulut bağlantı uyarısı: " + (err.message || "Veri alınamadı"), "info");
             }
             renderApp();
         }
@@ -426,13 +429,16 @@
                 showBanner("Bu işlem için yönetici yetkisi gereklidir.", "error");
                 return;
             }
+            // Ensure any ongoing note edits are synchronized before saving
+            window.updateLocalData();
+            
             try {
-                const docRef = doc(db, "menus", "menu_" + currentStartDate);
-                await setDoc(docRef, menuData);
+                const menuRef = ref(db, 'menus/menu_' + currentStartDate);
+                await set(menuRef, menuData);
                 showBanner("Menü başarıyla buluta kaydedildi!", "success");
             } catch (err) {
-                console.error("Firestore yazma hatası:", err);
-                showBanner("Menü kaydedilemedi! Lütfen Firestore kurallarını kontrol edin.", "error");
+                console.error("Database yazma hatası:", err);
+                showBanner("Menü kaydedilemedi: " + (err.message || "Yetki veya bağlantı hatası"), "error");
             }
         }
 
