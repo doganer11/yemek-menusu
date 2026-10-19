@@ -395,8 +395,8 @@
             let html = '';
             savedWeeksList.forEach(dateStr => {
                 const w1Mon = dateStr;
-                const w1Fri = addDays(w1Mon, 4);
-                const label = `${formatDateStr(w1Mon)} - ${formatDateStr(w1Fri)} Dönemi`;
+                const w2Fri = addDays(w1Mon, 11); // 11 days after start Monday is the 2nd week's Friday
+                const label = `${formatDateStr(w1Mon)} - ${formatDateStr(w2Fri)} Dönemi`;
                 const isSelected = (dateStr === selectedDate) ? 'selected' : '';
                 html += `<option value="${dateStr}" ${isSelected}>${label}</option>`;
             });
